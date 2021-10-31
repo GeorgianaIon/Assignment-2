@@ -1,0 +1,68 @@
+﻿@page "/AddAdult"
+@attribute [Authorize(Policy = "MustBeVIA")]
+@using AdultsClient.Models
+@using AdultsClient.Data
+
+@inject IAdultsService AdultData
+@inject NavigationManager NavigationManager
+
+<h3>Add Adult</h3>
+
+<EditForm Model="@newAdultItem" OnValidSubmit="@AddNewAdult">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div class="form-group">First Name: <br/>
+        <InputTextArea rows="1" @bind-Value="newAdultItem.FirstName"/>
+    </div>
+    <div class="form-group">Last Name: <br/>
+        <InputTextArea rows="1" @bind-Value="newAdultItem.LastName"/>
+    </div>
+    <div class="form-group">Age: <br/>
+        <InputNumber @bind-Value="newAdultItem.Age"/>
+    </div>
+    <div class="form-group">Sex: <br/>
+        <InputTextArea rows="1" @bind-Value="newAdultItem.Sex"/>
+    </div>
+    <div class="form-group">Height: <br/>
+        <InputNumber @bind-Value="newAdultItem.Height"/>
+    </div>
+    <div class="form-group">Weight:<br/>
+        <InputNumber @bind-Value="newAdultItem.Weight"/>
+    </div>
+    <div class="form-group">Eye Color: <br/>
+        <InputTextArea rows="1" @bind-Value="newAdultItem.EyeColor"/>
+    </div>
+    <div class="form-group">Hair Color: <br/>
+        <InputTextArea rows="1" @bind-Value="newAdultItem.HairColor"/>
+    </div>
+    <div class="form-group">Job: <br/>
+        <InputTextArea rows="1" @bind-Value="job.JobTitle"/>
+    </div>
+    <div class="form-group">Salary: <br/>
+        <InputNumber @bind-Value="job.Salary"/>
+    </div>
+
+
+    <p class="actions">
+        <button class="btn btn-outline-dark" type="submit">Add</button>
+    </p>
+</EditForm>
+
+@code {
+    private Adult newAdultItem = new Adult();
+    private Job job = new Job();
+
+    private void AddNewAdult()
+    {
+        AdultData.AddAdultsAsync(new Adult()
+        {
+            FirstName = newAdultItem.FirstName, LastName = newAdultItem.LastName, Age = newAdultItem.Age, Height = newAdultItem.Height,
+            EyeColor = newAdultItem.EyeColor, Weight = newAdultItem.Weight, HairColor = newAdultItem.HairColor, Sex = newAdultItem.Sex, 
+            JobTitle = new Job()
+            {
+                JobTitle = job.JobTitle, Salary = job.Salary
+            }
+        });
+        NavigationManager.NavigateTo("/Adults");
+    }
+}
